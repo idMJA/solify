@@ -198,4 +198,6 @@ src/
 
 ## License
 
-MIT
+This project is provided as-is for research and educational purposes only.
+
+See [LICENSE](LICENSE)
