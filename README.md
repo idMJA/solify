@@ -24,7 +24,7 @@ cp .env.example .env
 
 3. Configure your token endpoint in `.env`:
 ```env
-TOKEN_ENDPOINT=https://github.com/idMJA/accessify
+TOKEN_ENDPOINT=http://localhost:3000/spotifytoken 
 PORT=3000
 ```
 
