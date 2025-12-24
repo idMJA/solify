@@ -1,3 +1,5 @@
+import "dotenv/config";
+
 import { Hono } from "hono";
 import spotifyRoutes from "./routes/spotify.routes.js";
 
