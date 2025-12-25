@@ -168,14 +168,22 @@ export interface PartnerPlaylistResponse {
 }
 
 export interface PartnerRecommendationItem {
+	// some partner persisted queries return items wrapped as { content: { data: ... } }
+	// while others return { data: ... } at the top level. Support both shapes.
 	content?: {
 		data?: PartnerTrackData;
 	};
+	data?: PartnerTrackData;
 }
 
 export interface PartnerRecommendationsResponse {
 	data?: {
 		internalLinkRecommenderTrack?: {
+			items?: PartnerRecommendationItem[];
+		};
+		// some partner endpoints return recommendations under `seoRecommendedTrack`
+		// (observed in partner responses). Support that shape as a fallback.
+		seoRecommendedTrack?: {
 			items?: PartnerRecommendationItem[];
 		};
 	};

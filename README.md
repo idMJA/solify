@@ -46,7 +46,14 @@ bun start
 ## API Endpoints
 
 > [!IMPORTANT]
-> Only `/playlist/full` endpoints require the `Authorization` header for direct Spotify Web API access. Other endpoints use the internal token from `TOKEN_ENDPOINT`.
+> Most endpoints use the internal token from `TOKEN_ENDPOINT`. The `/playlist/full` endpoint requires `client_id` and `client_secret` credentials for direct Spotify Web API access (via query params or headers).
+
+### Credentials
+
+Credentials can be passed via:
+- **Query parameters**: `?client_id=...&client_secret=...`
+  or
+- **Headers**: `X-Client-Id`, `X-Client-Secret`
 
 ### Playlist
 Returns playlist tracks in standard Spotify Web API format from the Partner API.
@@ -61,82 +68,192 @@ GET /playlist/:id
 GET /playlist?url=https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS
 ```
 
-**Response:**
-```json
-{
-  "tracks": [
-    {
-      "album": { ... },
-      "artists": [ ... ],
-      "duration_ms": 223511,
-      "name": "Track Name",
-      "uri": "spotify:track:..."
-    }
-  ]
-}
-```
-
-### Playlist (Full Details)
-Returns up to 50 tracks with complete Spotify Web API details (includes additional fields like `popularity`, `external_ids`, `available_markets`, etc.).
-
-> [!WARNING]
-> This endpoint **requires** the `Authorization: Bearer YOUR_SPOTIFY_TOKEN` header.
-
-> [!TIP]
-> Use this endpoint when you need richer track metadata; it queries the official Spotify Web API directly.
-
-**By ID:**
-```
-GET /playlist/full/:id?limit=50
-Authorization: Bearer YOUR_SPOTIFY_TOKEN
-```
-
-**By URL:**
-```
-GET /playlist/full?url=https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS&limit=50
-Authorization: Bearer YOUR_SPOTIFY_TOKEN
-```
-
-> [!NOTE]
-> Limit defaults to 50 and is clamped to 1–50 maximum. Returns 401 if Authorization header is missing.
-
-**Response:**
+**Response (example):**
 ```json
 {
   "tracks": [
     {
       "album": {
         "album_type": "album",
-        "artists": [ ... ],
-        "available_markets": [ ... ],
-        "external_urls": { "spotify": "..." },
-        "href": "...",
-        "id": "...",
-        "images": [ ... ],
-        "name": "Album Name",
-        "release_date": "2006-06-28",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+            },
+            "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+            "id": "28ile6AlnprjyeQzy4F0SB",
+            "name": "中野家の五つ子",
+            "type": "artist",
+            "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+          }
+        ],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4y9VcDuLW4l7xkumHWL4n6"
+        },
+        "href": "https://api.spotify.com/v1/albums/4y9VcDuLW4l7xkumHWL4n6",
+        "id": "4y9VcDuLW4l7xkumHWL4n6",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e023920455e220ddcda838b6341",
+            "width": 300,
+            "height": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d000048513920455e220ddcda838b6341",
+            "width": 64,
+            "height": 64
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d0000b2733920455e220ddcda838b6341",
+            "width": 640,
+            "height": 640
+          }
+        ],
+        "name": "Gotobun no Katachi / Hatsukoi",
+        "release_date": null,
         "release_date_precision": "day",
-        "total_tracks": 12,
+        "total_tracks": null,
         "type": "album",
-        "uri": "..."
+        "uri": "spotify:album:4y9VcDuLW4l7xkumHWL4n6"
       },
-      "artists": [ ... ],
-      "available_markets": [ ... ],
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+          },
+          "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+          "id": "28ile6AlnprjyeQzy4F0SB",
+          "name": "中野家の五つ子",
+          "type": "artist",
+          "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+        }
+      ],
       "disc_number": 1,
-      "duration_ms": 366213,
+      "duration_ms": 243733,
       "explicit": false,
-      "external_ids": { "isrc": "..." },
-      "external_urls": { "spotify": "..." },
-      "href": "...",
-      "id": "...",
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/6p9nMH9net8AjLCZJZtCLW"
+      },
+      "href": "https://api.spotify.com/v1/tracks/6p9nMH9net8AjLCZJZtCLW",
+      "id": "6p9nMH9net8AjLCZJZtCLW",
       "is_local": false,
-      "name": "Track Name",
-      "popularity": 70,
+      "name": "Gotobun no Katachi",
+      "popularity": null,
       "preview_url": null,
-      "track_number": 11,
+      "track_number": 1,
       "type": "track",
-      "uri": "..."
+      "uri": "spotify:track:6p9nMH9net8AjLCZJZtCLW"
     }
+
+    /* additional track objects *
+  ]
+}
+```
+
+### Playlist (Full Details)
+Returns full Spotify Web API track details for all tracks in a playlist. Requires `client_id` and `client_secret`.
+
+**By ID:**
+```
+GET /playlist/full/:id?client_id=...&client_secret=...
+```
+
+**By URL:**
+```
+GET /playlist/full?url=https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS&client_id=...&client_secret=...
+```
+
+With headers:
+```
+GET /playlist/full/:id
+Headers:
+  X-Client-Id: your-client-id
+  X-Client-Secret: your-client-secret
+```
+
+**Response (example):**
+```json
+{
+  "tracks": [
+    {
+      "album": {
+        "album_type": "single",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+            },
+            "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+            "id": "28ile6AlnprjyeQzy4F0SB",
+            "name": "中野家の五つ子",
+            "type": "artist",
+            "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+          }
+        ],
+        "available_markets": [...], //list of country codes
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4Jx5LW1wbsc4PiPSSEkM6C"
+        },
+        "href": "https://api.spotify.com/v1/albums/4Jx5LW1wbsc4PiPSSEkM6C",
+        "id": "4Jx5LW1wbsc4PiPSSEkM6C",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d0000b273b126381bd3ace23ca228b846",
+            "width": 640,
+            "height": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e02b126381bd3ace23ca228b846",
+            "width": 300,
+            "height": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00004851b126381bd3ace23ca228b846",
+            "width": 64,
+            "height": 64
+          }
+        ],
+        "name": "Minamikaze, Summer Days",
+        "release_date": "2021",
+        "release_date_precision": "year",
+        "total_tracks": 6,
+        "type": "album",
+        "uri": "spotify:album:4Jx5LW1wbsc4PiPSSEkM6C"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+          },
+          "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+          "id": "28ile6AlnprjyeQzy4F0SB",
+          "name": "中野家の五つ子",
+          "type": "artist",
+          "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+        }
+      ],
+      "available_markets": [...], //list of country codes
+      "disc_number": 1,
+      "duration_ms": 227106,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "JPPC02002081"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/7zvRSERTwH7ovbYGoAk8wx"
+      },
+      "href": "https://api.spotify.com/v1/tracks/7zvRSERTwH7ovbYGoAk8wx",
+      "id": "7zvRSERTwH7ovbYGoAk8wx",
+      "is_local": false,
+      "name": "Minamikaze",
+      "popularity": 34,
+      "preview_url": null,
+      "track_number": 1,
+      "type": "track",
+      "uri": "spotify:track:7zvRSERTwH7ovbYGoAk8wx"
+    }
+
+    /* additional track objects */
   ]
 }
 ```
@@ -151,49 +268,241 @@ GET /recommendations/:id?limit=5
 
 **By Track URL:**
 ```
-GET /recommendations?url=https://open.spotify.com/track/2TXVTQf4YZH9o0kDVUUdjj&limit=5
+GET /recommendations?url=https://open.spotify.com/track/7s2O8rpKRgPWhgqiHmmm4v
 ```
 
-**Response:**
+**Response (example):**
 ```json
 {
   "seeds": [
     {
       "afterFilteringSize": 5,
       "afterRelinkingSize": 5,
-      "href": "https://api.spotify.com/v1/tracks/...",
-      "id": "...",
+      "href": "https://api.spotify.com/v1/tracks/7s2O8rpKRgPWhgqiHmmm4v",
+      "id": "7s2O8rpKRgPWhgqiHmmm4v",
       "initialPoolSize": 5,
       "type": "track"
     }
   ],
   "tracks": [
     {
-      "album": { ... },
-      "artists": [ ... ],
-      "duration_ms": 223511,
+      "album": {
+        "album_type": "album",
+        "total_tracks": null,
+        "available_markets": [],
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4cm3TtYiebA1JHra2lMRnd"
+        },
+        "href": "https://api.spotify.com/v1/albums/4cm3TtYiebA1JHra2lMRnd",
+        "id": "4cm3TtYiebA1JHra2lMRnd",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e029cf9efa46a12fda63e0c8abe",
+            "height": 300,
+            "width": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d000048519cf9efa46a12fda63e0c8abe",
+            "height": 64,
+            "width": 64
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d0000b2739cf9efa46a12fda63e0c8abe",
+            "height": 640,
+            "width": 640
+          }
+        ],
+        "name": "",
+        "release_date": null,
+        "release_date_precision": "year",
+        "type": "album",
+        "uri": "spotify:album:4cm3TtYiebA1JHra2lMRnd",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4ES04xmx6ZGMYGyGIfGQgf"
+            },
+            "href": "https://api.spotify.com/v1/artists/4ES04xmx6ZGMYGyGIfGQgf",
+            "id": "4ES04xmx6ZGMYGyGIfGQgf",
+            "name": "佐々木恵梨",
+            "type": "artist",
+            "uri": "spotify:artist:4ES04xmx6ZGMYGyGIfGQgf"
+          }
+        ]
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4ES04xmx6ZGMYGyGIfGQgf"
+          },
+          "href": "https://api.spotify.com/v1/artists/4ES04xmx6ZGMYGyGIfGQgf",
+          "id": "4ES04xmx6ZGMYGyGIfGQgf",
+          "name": "佐々木恵梨",
+          "type": "artist",
+          "uri": "spotify:artist:4ES04xmx6ZGMYGyGIfGQgf"
+        }
+      ],
+      "available_markets": [],
+      "explicit": false,
+      "external_ids": {
+
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/2lPuTPwMUBRpNfNrA7sfuT"
+      },
+      "href": "https://api.spotify.com/v1/tracks/2lPuTPwMUBRpNfNrA7sfuT",
+      "id": "2lPuTPwMUBRpNfNrA7sfuT",
       "is_playable": true,
-      "name": "Track Name",
-      "uri": "spotify:track:..."
+      "name": "Ring of Fortune",
+      "popularity": null,
+      "preview_url": null,
+      "type": "track",
+      "uri": "spotify:track:2lPuTPwMUBRpNfNrA7sfuT",
+      "is_local": false
     }
+
+    /* additional track objects */
   ]
 }
 ```
+
+### Recommendations (Full Details)
+Returns full Spotify Web API track details for recommendations derived from a seed track. Requires `client_id` and `client_secret` (same pattern as `/playlist/full`).
+
+**By Track ID:**
+```
+GET /recommendations/full/:id?client_id=...&client_secret=...
+```
+
+**By Track URL:**
+```
+GET /recommendations/full?url=https://open.spotify.com/track/6TdiF8DD5f2qG5FXPtBtzb&client_id=...&client_secret=...
+```
+
+With headers:
+```
+GET /recommendations/full/:id
+Headers:
+  X-Client-Id: your-client-id
+  X-Client-Secret: your-client-secret
+```
+
+**Response (example):**
+```json
+{
+  "seeds": [
+    {
+      "afterFilteringSize": 5,
+      "afterRelinkingSize": 5,
+      "href": "https://api.spotify.com/v1/tracks/6TdiF8DD5f2qG5FXPtBtzb",
+      "id": "6TdiF8DD5f2qG5FXPtBtzb",
+      "initialPoolSize": 5,
+      "type": "track"
+    }
+  ],
+  "tracks": [
+    {
+      "album": {
+        "album_type": "album",
+        "artists": [
+          {
+            "external_urls": {
+              "spotify": "https://open.spotify.com/artist/4ES04xmx6ZGMYGyGIfGQgf"
+            },
+            "href": "https://api.spotify.com/v1/artists/4ES04xmx6ZGMYGyGIfGQgf",
+            "id": "4ES04xmx6ZGMYGyGIfGQgf",
+            "name": "佐々木恵梨",
+            "type": "artist",
+            "uri": "spotify:artist:4ES04xmx6ZGMYGyGIfGQgf"
+          }
+        ],
+        "available_markets": [...], //list of country codes
+        "external_urls": {
+          "spotify": "https://open.spotify.com/album/4cm3TtYiebA1JHra2lMRnd"
+        },
+        "href": "https://api.spotify.com/v1/albums/4cm3TtYiebA1JHra2lMRnd",
+        "id": "4cm3TtYiebA1JHra2lMRnd",
+        "images": [
+          {
+            "url": "https://i.scdn.co/image/ab67616d0000b2739cf9efa46a12fda63e0c8abe",
+            "width": 640,
+            "height": 640
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d00001e029cf9efa46a12fda63e0c8abe",
+            "width": 300,
+            "height": 300
+          },
+          {
+            "url": "https://i.scdn.co/image/ab67616d000048519cf9efa46a12fda63e0c8abe",
+            "width": 64,
+            "height": 64
+          }
+        ],
+        "name": "Period",
+        "release_date": "2017-08-23",
+        "release_date_precision": "day",
+        "total_tracks": 12,
+        "type": "album",
+        "uri": "spotify:album:4cm3TtYiebA1JHra2lMRnd"
+      },
+      "artists": [
+        {
+          "external_urls": {
+            "spotify": "https://open.spotify.com/artist/4ES04xmx6ZGMYGyGIfGQgf"
+          },
+          "href": "https://api.spotify.com/v1/artists/4ES04xmx6ZGMYGyGIfGQgf",
+          "id": "4ES04xmx6ZGMYGyGIfGQgf",
+          "name": "佐々木恵梨",
+          "type": "artist",
+          "uri": "spotify:artist:4ES04xmx6ZGMYGyGIfGQgf"
+        }
+      ],
+      "available_markets": [...], //list of country codes
+      "disc_number": 1,
+      "duration_ms": 261399,
+      "explicit": false,
+      "external_ids": {
+        "isrc": "JPK631501301"
+      },
+      "external_urls": {
+        "spotify": "https://open.spotify.com/track/2lPuTPwMUBRpNfNrA7sfuT"
+      },
+      "href": "https://api.spotify.com/v1/tracks/2lPuTPwMUBRpNfNrA7sfuT",
+      "id": "2lPuTPwMUBRpNfNrA7sfuT",
+      "is_local": false,
+      "name": "Ring of Fortune",
+      "popularity": 46,
+      "preview_url": null,
+      "track_number": 1,
+      "type": "track",
+      "uri": "spotify:track:2lPuTPwMUBRpNfNrA7sfuT"
+    }
+
+    /* additional track objects */
+  ]
+}
+```
+
+Fields in each track follow the standard Spotify Web API `Track` object (album, artists, available_markets, external_ids, popularity, preview_url, etc.).
 
 ## Project Structure
 
 ```
 src/
 ├── config/
-│   └── env.ts           # Environment configuration
+│   └── env.ts              # Environment configuration
 ├── services/
-│   ├── token.service.ts # Token management
-│   └── spotify.service.ts # Spotify API calls + transformers
+│   ├── token.service.ts    # Token management
+│   └── spotify.service.ts  # Spotify API calls
+├── utils/
+│   ├── extractors.ts       # ID extraction utilities (playlist & track)
+│   └── transformers.ts     # Response transformation utilities
 ├── types/
-│   └── spotify.ts       # Type definitions for Spotify API responses
+│   └── spotify.ts          # Type definitions for Spotify API responses
 ├── routes/
-│   └── spotify.routes.ts # Route handlers
-└── index.ts             # Main application
+│   └── spotify.routes.ts   # Route handlers
+└── index.ts                # Main application
 ```
 
 ## License

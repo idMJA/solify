@@ -1,221 +1,17 @@
 import type {
-	PartnerArtist,
-	PartnerImage,
-	PartnerPlaylistItem,
-	PartnerPlaylistResponse,
-	PartnerRecommendationItem,
-	PartnerRecommendationsResponse,
 	PlaylistRequestVariables,
-	PlaylistTracksResponse,
 	RecommendationRequestVariables,
-	RecommendationsResponse,
 	SpotifyAPIRequest,
-	SpotifyArtist,
-	SpotifyPlaylistTrackItem,
 	SpotifyTrack,
-	SpotifyWebPlaylistTracksResponse,
 } from "../types/spotify.js";
-import { getAccessToken } from "./token.service.js";
+import {
+	transformPlaylistResponse,
+	transformRecommendationsResponse,
+} from "../utils/transformers.js";
+import { getAccessToken, getWebApiToken } from "./token.service.js";
 
 const SPOTIFY_API_BASE = "https://api-partner.spotify.com/pathfinder/v2/query";
 const SPOTIFY_WEB_API_BASE = "https://api.spotify.com/v1";
-
-function transformPlaylistResponse(
-	data: PartnerPlaylistResponse,
-): PlaylistTracksResponse {
-	const playlistData = data?.data?.playlistV2;
-	if (!playlistData?.content?.items) {
-		return { tracks: [] };
-	}
-
-	const tracks = playlistData.content.items
-		.map((item: PartnerPlaylistItem) => {
-			const trackData = item.itemV2?.data;
-			if (!trackData || trackData.__typename !== "Track") {
-				return null;
-			}
-
-			const album = trackData.albumOfTrack;
-			const artists: PartnerArtist[] = trackData.artists?.items ?? [];
-			const albumId = album?.uri?.split(":")[2] ?? "";
-			const trackId = trackData.uri?.split(":")[2] ?? "";
-
-			const track: SpotifyTrack = {
-				album: {
-					album_type: "album",
-					artists: artists.map(
-						(artist): SpotifyArtist => ({
-							external_urls: {
-								spotify: `https://open.spotify.com/artist/${artist.uri?.split(":")[2]}`,
-							},
-							href: `https://api.spotify.com/v1/artists/${artist.uri?.split(":")[2]}`,
-							id: artist.uri?.split(":")[2] ?? "",
-							name: artist.profile?.name ?? "",
-							type: "artist",
-							uri: artist.uri ?? "",
-						}),
-					),
-					external_urls: {
-						spotify: `https://open.spotify.com/album/${albumId}`,
-					},
-					href: `https://api.spotify.com/v1/albums/${albumId}`,
-					id: albumId,
-					images:
-						album?.coverArt?.sources?.map((source: PartnerImage) => ({
-							url: source.url ?? "",
-							width: source.width ?? null,
-							height: source.height ?? null,
-						})) || [],
-					name: album?.name ?? "",
-					release_date: null,
-					release_date_precision: "day",
-					total_tracks: null,
-					type: "album",
-					uri: album?.uri ?? "",
-				},
-				artists: artists.map(
-					(artist): SpotifyArtist => ({
-						external_urls: {
-							spotify: `https://open.spotify.com/artist/${artist.uri?.split(":")[2]}`,
-						},
-						href: `https://api.spotify.com/v1/artists/${artist.uri?.split(":")[2]}`,
-						id: artist.uri?.split(":")[2] ?? "",
-						name: artist.profile?.name ?? "",
-						type: "artist",
-						uri: artist.uri ?? "",
-					}),
-				),
-				disc_number: trackData.discNumber,
-				duration_ms: trackData.trackDuration?.totalMilliseconds,
-				explicit: trackData.contentRating?.label !== "NONE",
-				external_urls: {
-					spotify: `https://open.spotify.com/track/${trackId}`,
-				},
-				href: `https://api.spotify.com/v1/tracks/${trackId}`,
-				id: trackId,
-				is_local: false,
-				name: trackData.name ?? "",
-				popularity: null,
-				preview_url: null,
-				track_number: trackData.trackNumber,
-				type: "track",
-				uri: trackData.uri ?? "",
-			};
-			return track;
-		})
-		.filter((track: SpotifyTrack | null): track is SpotifyTrack =>
-			Boolean(track),
-		);
-
-	return { tracks };
-}
-
-function transformRecommendationsResponse(
-	data: PartnerRecommendationsResponse,
-	seedTrackId: string,
-): RecommendationsResponse {
-	const recommendations = data?.data?.internalLinkRecommenderTrack?.items;
-	if (!recommendations) {
-		return { seeds: [], tracks: [] };
-	}
-
-	const tracks = recommendations
-		.map((item: PartnerRecommendationItem) => {
-			const trackData = item.content?.data;
-			if (!trackData || trackData.__typename !== "Track") {
-				return null;
-			}
-
-			const album = trackData.albumOfTrack;
-			const artists: PartnerArtist[] = trackData.artists?.items ?? [];
-			const albumId = album?.uri?.split(":")[2] ?? "";
-			const trackId = trackData.uri?.split(":")[2] ?? "";
-
-			const track: SpotifyTrack = {
-				album: {
-					album_type: "album",
-					total_tracks: null,
-					available_markets: [],
-					external_urls: {
-						spotify: `https://open.spotify.com/album/${albumId}`,
-					},
-					href: `https://api.spotify.com/v1/albums/${albumId}`,
-					id: albumId,
-					images:
-						album?.coverArt?.sources?.map((source: PartnerImage) => ({
-							url: source.url ?? "",
-							height: source.height ?? null,
-							width: source.width ?? null,
-						})) || [],
-					name: album?.name ?? "",
-					release_date: null,
-					release_date_precision: "year",
-					type: "album",
-					uri: album?.uri ?? "",
-					artists: artists.map(
-						(artist): SpotifyArtist => ({
-							external_urls: {
-								spotify: `https://open.spotify.com/artist/${artist.uri?.split(":")[2]}`,
-							},
-							href: `https://api.spotify.com/v1/artists/${artist.uri?.split(":")[2]}`,
-							id: artist.uri?.split(":")[2] ?? "",
-							name: artist.profile?.name ?? "",
-							type: "artist",
-							uri: artist.uri ?? "",
-						}),
-					),
-				},
-				artists: artists.map(
-					(artist): SpotifyArtist => ({
-						external_urls: {
-							spotify: `https://open.spotify.com/artist/${artist.uri?.split(":")[2]}`,
-						},
-						href: `https://api.spotify.com/v1/artists/${artist.uri?.split(":")[2]}`,
-						id: artist.uri?.split(":")[2] ?? "",
-						name: artist.profile?.name ?? "",
-						type: "artist",
-						uri: artist.uri ?? "",
-					}),
-				),
-				available_markets: [],
-				disc_number: trackData.discNumber,
-				duration_ms: trackData.trackDuration?.totalMilliseconds,
-				explicit: trackData.contentRating?.label !== "NONE",
-				external_ids: {},
-				external_urls: {
-					spotify: `https://open.spotify.com/track/${trackId}`,
-				},
-				href: `https://api.spotify.com/v1/tracks/${trackId}`,
-				id: trackId,
-				is_playable: trackData.playability?.playable || false,
-				name: trackData.name ?? "",
-				popularity: null,
-				preview_url: null,
-				track_number: trackData.trackNumber,
-				type: "track",
-				uri: trackData.uri ?? "",
-				is_local: false,
-			};
-			return track;
-		})
-		.filter((track: SpotifyTrack | null): track is SpotifyTrack =>
-			Boolean(track),
-		);
-
-	return {
-		seeds: [
-			{
-				afterFilteringSize: tracks.length,
-				afterRelinkingSize: tracks.length,
-				href: `https://api.spotify.com/v1/tracks/${seedTrackId}`,
-				id: seedTrackId,
-				initialPoolSize: tracks.length,
-				type: "track",
-			},
-		],
-		tracks,
-	};
-}
 
 export async function fetchPlaylist(playlistId: string, authToken?: string) {
 	const token = authToken ?? (await getAccessToken());
@@ -250,38 +46,6 @@ export async function fetchPlaylist(playlistId: string, authToken?: string) {
 
 	const data = await response.json();
 	return transformPlaylistResponse(data);
-}
-
-export async function fetchPlaylistFull(
-	playlistId: string,
-	limit: number = 50,
-	authToken?: string,
-): Promise<PlaylistTracksResponse> {
-	const token = authToken ?? (await getAccessToken());
-	const clampedLimit = Math.max(1, Math.min(limit, 50));
-
-	const response = await fetch(
-		`${SPOTIFY_WEB_API_BASE}/playlists/${playlistId}/tracks?limit=${clampedLimit}`,
-		{
-			headers: {
-				Authorization: `Bearer ${token}`,
-				"Content-Type": "application/json",
-			},
-		},
-	);
-
-	if (!response.ok) {
-		throw new Error(`Spotify API error: ${response.statusText}`);
-	}
-
-	const data: SpotifyWebPlaylistTracksResponse = await response.json();
-	const tracks = (data.items ?? [])
-		.map((item: SpotifyPlaylistTrackItem) => item.track ?? null)
-		.filter((track: SpotifyTrack | null): track is SpotifyTrack =>
-			Boolean(track),
-		);
-
-	return { tracks };
 }
 
 export async function fetchRecommendations(
@@ -321,4 +85,101 @@ export async function fetchRecommendations(
 
 	const data = await response.json();
 	return transformRecommendationsResponse(data, trackId);
+}
+
+export async function fetchPlaylistFull(
+	playlistId: string,
+	clientId?: string,
+	clientSecret?: string,
+) {
+	const playlist = await fetchPlaylist(playlistId);
+	const ids = playlist.tracks.map((t) => t.id).filter(Boolean);
+
+	if (!ids.length) {
+		return { tracks: [] };
+	}
+
+	const token = await getWebApiToken(clientId, clientSecret);
+
+	const batches: string[][] = [];
+	for (let i = 0; i < ids.length; i += 50) {
+		batches.push(ids.slice(i, i + 50));
+	}
+
+	const aggregatedTracks: SpotifyTrack[] = [];
+
+	for (const batch of batches) {
+		const url = `${SPOTIFY_WEB_API_BASE}/tracks?ids=${encodeURIComponent(batch.join(","))}`;
+		const response = await fetch(url, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		if (!response.ok) {
+			const text = await response.text();
+			throw new Error(
+				`Spotify Web API error: ${response.status} ${response.statusText} - ${text}`,
+			);
+		}
+
+		const data = await response.json();
+		if (Array.isArray(data.tracks)) {
+			aggregatedTracks.push(...data.tracks);
+		}
+	}
+
+	return { tracks: aggregatedTracks };
+}
+
+export async function fetchRecommendationsFull(
+	trackId: string,
+	limit: number = 5,
+	clientId?: string,
+	clientSecret?: string,
+) {
+	// Get the lightweight recommendations (seeds + track ids)
+	const rec = await fetchRecommendations(trackId, limit);
+	const ids = rec.tracks.map((t) => t.id).filter(Boolean);
+
+	if (!ids.length) {
+		// return the original seeds and empty tracks array
+		return { seeds: rec.seeds, tracks: [] };
+	}
+
+	const token = await getWebApiToken(clientId, clientSecret);
+
+	const batches: string[][] = [];
+	for (let i = 0; i < ids.length; i += 50) {
+		batches.push(ids.slice(i, i + 50));
+	}
+
+	const aggregatedTracks: SpotifyTrack[] = [];
+
+	for (const batch of batches) {
+		const url = `${SPOTIFY_WEB_API_BASE}/tracks?ids=${encodeURIComponent(
+			batch.join(","),
+		)}`;
+		const response = await fetch(url, {
+			method: "GET",
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		});
+
+		if (!response.ok) {
+			const text = await response.text();
+			throw new Error(
+				`Spotify Web API error: ${response.status} ${response.statusText} - ${text}`,
+			);
+		}
+
+		const data = await response.json();
+		if (Array.isArray(data.tracks)) {
+			aggregatedTracks.push(...data.tracks);
+		}
+	}
+
+	return { seeds: rec.seeds, tracks: aggregatedTracks };
 }

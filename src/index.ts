@@ -13,6 +13,12 @@ const app = new Hono()
 					byId: "/playlist/:id",
 					byUrl: "/playlist?url=<spotify-playlist-url>",
 				},
+				playlistFull: {
+					byId: "/playlist/full/:id",
+					byUrl: "/playlist/full?url=<spotify-playlist-url>",
+					notes:
+						"Required: every request must include client_id and client_secret as query params or x-spotify-client-id/x-spotify-client-secret (or x-client-id/x-client-secret) headers",
+				},
 				recommendations: {
 					byId: "/recommendations/:id?limit=5",
 					byUrl: "/recommendations?url=<spotify-track-url>&limit=5",
