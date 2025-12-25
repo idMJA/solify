@@ -73,8 +73,48 @@ export interface SpotifyTrack {
 	uri: string;
 }
 
-export interface PlaylistTracksResponse {
-	tracks: SpotifyTrack[];
+export interface SpotifyUser {
+	display_name?: string | null;
+	external_urls?: SpotifyExternalUrl;
+	href?: string | null;
+	id?: string | null;
+	type?: string | null;
+	uri?: string | null;
+}
+
+export interface SpotifyPlaylistTrackItem {
+	added_at?: string | null;
+	added_by?: SpotifyUser | null;
+	is_local?: boolean;
+	primary_color?: string | null;
+	track?: SpotifyTrack | null;
+	video_thumbnail?: { url?: string | null };
+}
+
+export interface SpotifyPlaylist {
+	collaborative: boolean;
+	description: string | null;
+	external_urls: SpotifyExternalUrl;
+	followers: { href: string | null; total: number | null };
+	href: string;
+	id: string;
+	images: SpotifyImage[];
+	name: string;
+	owner: SpotifyUser;
+	primary_color?: string | null;
+	public?: boolean | null;
+	snapshot_id?: string | null;
+	tracks: {
+		href: string;
+		items: SpotifyPlaylistTrackItem[];
+		limit?: number;
+		next?: string | null;
+		offset?: number;
+		previous?: string | null;
+		total?: number;
+	};
+	type: "playlist";
+	uri: string;
 }
 
 export interface RecommendationSeed {
@@ -155,6 +195,15 @@ export interface PartnerPlaylistItem {
 	itemV2?: {
 		data?: PartnerTrackData;
 	};
+
+	// optional metadata included by partner responses
+	addedAt?: string;
+	added_at?: string;
+	addedBy?: {
+		uri?: string;
+		href?: string;
+		profile?: { name?: string };
+	};
 }
 
 export interface PartnerPlaylistResponse {
@@ -163,6 +212,16 @@ export interface PartnerPlaylistResponse {
 			content?: {
 				items?: PartnerPlaylistItem[];
 			};
+			// optional metadata mirrored from the Web API
+			uri?: string;
+			name?: string;
+			description?: string;
+			images?: PartnerImage[];
+			owner?: { uri?: string; href?: string; profile?: { name?: string } };
+			followers?: { total?: number };
+			public?: boolean;
+			snapshotId?: string;
+			collaborative?: boolean;
 		};
 	};
 }

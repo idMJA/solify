@@ -2,6 +2,8 @@ import type {
 	PlaylistRequestVariables,
 	RecommendationRequestVariables,
 	SpotifyAPIRequest,
+	SpotifyPlaylist,
+	SpotifyPlaylistTrackItem,
 	SpotifyTrack,
 } from "../types/spotify.js";
 import {
@@ -13,7 +15,10 @@ import { getAccessToken, getWebApiToken } from "./token.service.js";
 const SPOTIFY_API_BASE = "https://api-partner.spotify.com/pathfinder/v2/query";
 const SPOTIFY_WEB_API_BASE = "https://api.spotify.com/v1";
 
-export async function fetchPlaylist(playlistId: string, authToken?: string) {
+export async function fetchPlaylist(
+	playlistId: string,
+	authToken?: string,
+): Promise<SpotifyPlaylist> {
 	const token = authToken ?? (await getAccessToken());
 
 	const payload: SpotifyAPIRequest<PlaylistRequestVariables> = {
@@ -45,7 +50,8 @@ export async function fetchPlaylist(playlistId: string, authToken?: string) {
 	}
 
 	const data = await response.json();
-	return transformPlaylistResponse(data);
+	// returns a SpotifyPlaylist object (Spotify Web API-like) or legacy tracks list
+	return transformPlaylistResponse(data) as SpotifyPlaylist;
 }
 
 export async function fetchRecommendations(
@@ -92,11 +98,15 @@ export async function fetchPlaylistFull(
 	clientId?: string,
 	clientSecret?: string,
 ) {
-	const playlist = await fetchPlaylist(playlistId);
-	const ids = playlist.tracks.map((t) => t.id).filter(Boolean);
+	const playlist = (await fetchPlaylist(playlistId)) as SpotifyPlaylist;
+
+	const items: SpotifyPlaylistTrackItem[] = playlist.tracks?.items ?? [];
+	const ids = items
+		.map((it) => it.track?.id)
+		.filter((x): x is string => Boolean(x));
 
 	if (!ids.length) {
-		return { tracks: [] };
+		return playlist;
 	}
 
 	const token = await getWebApiToken(clientId, clientSecret);
@@ -130,7 +140,19 @@ export async function fetchPlaylistFull(
 		}
 	}
 
-	return { tracks: aggregatedTracks };
+	// Merge full track objects back into playlist items
+	const idMap = new Map(aggregatedTracks.map((t) => [t.id, t]));
+	const mergedItems = items.map((it) => {
+		const id = it.track?.id;
+		if (id && idMap.has(id)) {
+			return { ...it, track: idMap.get(id) };
+		}
+		return it;
+	});
+	// Patch the existing playlist object
+	playlist.tracks.items = mergedItems;
+	playlist.tracks.total = mergedItems.length;
+	return playlist;
 }
 
 export async function fetchRecommendationsFull(

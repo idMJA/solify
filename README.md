@@ -71,82 +71,129 @@ GET /playlist?url=https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS
 **Response (example):**
 ```json
 {
-  "tracks": [
-    {
-      "album": {
-        "album_type": "album",
-        "artists": [
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
-            },
-            "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
-            "id": "28ile6AlnprjyeQzy4F0SB",
-            "name": "中野家の五つ子",
-            "type": "artist",
-            "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
-          }
-        ],
-        "external_urls": {
-          "spotify": "https://open.spotify.com/album/4y9VcDuLW4l7xkumHWL4n6"
+  "collaborative": false,
+  "description": "Nakanoke no Itsutsugo, aluto, YOASOBI and more",
+  "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS"
+  },
+  "followers": {
+    "href": null,
+    "total": null
+  },
+  "href": "https://api.spotify.com/v1/playlists/37i9dQZF1E35HoLL235RmS",
+  "id": "37i9dQZF1E35HoLL235RmS",
+  "images": [],
+  "name": "Daily Mix 1",
+  "owner": {
+    "display_name": null,
+    "external_urls": {
+      "spotify": ""
+    },
+    "href": null,
+    "id": null,
+    "type": "user",
+    "uri": null
+  },
+  "primary_color": null,
+  "public": null,
+  "snapshot_id": null,
+  "tracks": {
+    "href": "https://api.spotify.com/v1/playlists/37i9dQZF1E35HoLL235RmS/tracks?offset=0&limit=50",
+    "items": [
+      {
+        "added_at": {
+          "isoString": "1970-01-01T00:00:00Z"
         },
-        "href": "https://api.spotify.com/v1/albums/4y9VcDuLW4l7xkumHWL4n6",
-        "id": "4y9VcDuLW4l7xkumHWL4n6",
-        "images": [
-          {
-            "url": "https://i.scdn.co/image/ab67616d00001e023920455e220ddcda838b6341",
-            "width": 300,
-            "height": 300
+        "added_by": null,
+        "is_local": false,
+        "primary_color": null,
+        "track": {
+          "album": {
+            "album_type": "album",
+            "artists": [
+              {
+                "external_urls": {
+                  "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+                },
+                "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+                "id": "28ile6AlnprjyeQzy4F0SB",
+                "name": "中野家の五つ子",
+                "type": "artist",
+                "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+              }
+            ],
+            "external_urls": {
+              "spotify": "https://open.spotify.com/album/4y9VcDuLW4l7xkumHWL4n6"
+            },
+            "href": "https://api.spotify.com/v1/albums/4y9VcDuLW4l7xkumHWL4n6",
+            "id": "4y9VcDuLW4l7xkumHWL4n6",
+            "images": [
+              {
+                "url": "https://i.scdn.co/image/ab67616d00001e023920455e220ddcda838b6341",
+                "width": 300,
+                "height": 300
+              },
+              {
+                "url": "https://i.scdn.co/image/ab67616d000048513920455e220ddcda838b6341",
+                "width": 64,
+                "height": 64
+              },
+              {
+                "url": "https://i.scdn.co/image/ab67616d0000b2733920455e220ddcda838b6341",
+                "width": 640,
+                "height": 640
+              }
+            ],
+            "name": "Gotobun no Katachi / Hatsukoi",
+            "release_date": null,
+            "release_date_precision": "day",
+            "total_tracks": null,
+            "type": "album",
+            "uri": "spotify:album:4y9VcDuLW4l7xkumHWL4n6"
           },
-          {
-            "url": "https://i.scdn.co/image/ab67616d000048513920455e220ddcda838b6341",
-            "width": 64,
-            "height": 64
-          },
-          {
-            "url": "https://i.scdn.co/image/ab67616d0000b2733920455e220ddcda838b6341",
-            "width": 640,
-            "height": 640
-          }
-        ],
-        "name": "Gotobun no Katachi / Hatsukoi",
-        "release_date": null,
-        "release_date_precision": "day",
-        "total_tracks": null,
-        "type": "album",
-        "uri": "spotify:album:4y9VcDuLW4l7xkumHWL4n6"
-      },
-      "artists": [
-        {
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+              },
+              "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+              "id": "28ile6AlnprjyeQzy4F0SB",
+              "name": "中野家の五つ子",
+              "type": "artist",
+              "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+            }
+          ],
+          "disc_number": 1,
+          "duration_ms": 243733,
+          "explicit": false,
           "external_urls": {
-            "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+            "spotify": "https://open.spotify.com/track/6p9nMH9net8AjLCZJZtCLW"
           },
-          "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
-          "id": "28ile6AlnprjyeQzy4F0SB",
-          "name": "中野家の五つ子",
-          "type": "artist",
-          "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+          "href": "https://api.spotify.com/v1/tracks/6p9nMH9net8AjLCZJZtCLW",
+          "id": "6p9nMH9net8AjLCZJZtCLW",
+          "is_local": false,
+          "name": "Gotobun no Katachi",
+          "popularity": null,
+          "preview_url": null,
+          "track_number": 1,
+          "type": "track",
+          "uri": "spotify:track:6p9nMH9net8AjLCZJZtCLW"
+        },
+        "video_thumbnail": {
+          "url": null
         }
-      ],
-      "disc_number": 1,
-      "duration_ms": 243733,
-      "explicit": false,
-      "external_urls": {
-        "spotify": "https://open.spotify.com/track/6p9nMH9net8AjLCZJZtCLW"
-      },
-      "href": "https://api.spotify.com/v1/tracks/6p9nMH9net8AjLCZJZtCLW",
-      "id": "6p9nMH9net8AjLCZJZtCLW",
-      "is_local": false,
-      "name": "Gotobun no Katachi",
-      "popularity": null,
-      "preview_url": null,
-      "track_number": 1,
-      "type": "track",
-      "uri": "spotify:track:6p9nMH9net8AjLCZJZtCLW"
-    }
+      }
 
-    /* additional track objects *
-  ]
+      /* additional track objects */
+    ],
+    "limit": 50,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 50
+  },
+  "type": "playlist",
+  "uri": "spotify:playlist:37i9dQZF1E35HoLL235RmS"
 }
 ```
 
@@ -174,87 +221,134 @@ Headers:
 **Response (example):**
 ```json
 {
-  "tracks": [
-    {
-      "album": {
-        "album_type": "single",
-        "artists": [
-          {
-            "external_urls": {
-              "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
-            },
-            "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
-            "id": "28ile6AlnprjyeQzy4F0SB",
-            "name": "中野家の五つ子",
-            "type": "artist",
-            "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
-          }
-        ],
-        "available_markets": [...], //list of country codes
-        "external_urls": {
-          "spotify": "https://open.spotify.com/album/4Jx5LW1wbsc4PiPSSEkM6C"
+  "collaborative": false,
+  "description": "Nakanoke no Itsutsugo, aluto, YOASOBI and more",
+  "external_urls": {
+    "spotify": "https://open.spotify.com/playlist/37i9dQZF1E35HoLL235RmS"
+  },
+  "followers": {
+    "href": null,
+    "total": null
+  },
+  "href": "https://api.spotify.com/v1/playlists/37i9dQZF1E35HoLL235RmS",
+  "id": "37i9dQZF1E35HoLL235RmS",
+  "images": [],
+  "name": "Daily Mix 1",
+  "owner": {
+    "display_name": null,
+    "external_urls": {
+      "spotify": ""
+    },
+    "href": null,
+    "id": null,
+    "type": "user",
+    "uri": null
+  },
+  "primary_color": null,
+  "public": null,
+  "snapshot_id": null,
+  "tracks": {
+    "href": "https://api.spotify.com/v1/playlists/37i9dQZF1E35HoLL235RmS/tracks?offset=0&limit=50",
+    "items": [
+      {
+        "added_at": {
+          "isoString": "1970-01-01T00:00:00Z"
         },
-        "href": "https://api.spotify.com/v1/albums/4Jx5LW1wbsc4PiPSSEkM6C",
-        "id": "4Jx5LW1wbsc4PiPSSEkM6C",
-        "images": [
-          {
-            "url": "https://i.scdn.co/image/ab67616d0000b273b126381bd3ace23ca228b846",
-            "width": 640,
-            "height": 640
+        "added_by": null,
+        "is_local": false,
+        "primary_color": null,
+        "track": {
+          "album": {
+            "album_type": "single",
+            "artists": [
+              {
+                "external_urls": {
+                  "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+                },
+                "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+                "id": "28ile6AlnprjyeQzy4F0SB",
+                "name": "中野家の五つ子",
+                "type": "artist",
+                "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+              }
+            ],
+            "available_markets": [...], //list of country codes
+            "external_urls": {
+              "spotify": "https://open.spotify.com/album/4y9VcDuLW4l7xkumHWL4n6"
+            },
+            "href": "https://api.spotify.com/v1/albums/4y9VcDuLW4l7xkumHWL4n6",
+            "id": "4y9VcDuLW4l7xkumHWL4n6",
+            "images": [
+              {
+                "url": "https://i.scdn.co/image/ab67616d0000b2733920455e220ddcda838b6341",
+                "width": 640,
+                "height": 640
+              },
+              {
+                "url": "https://i.scdn.co/image/ab67616d00001e023920455e220ddcda838b6341",
+                "width": 300,
+                "height": 300
+              },
+              {
+                "url": "https://i.scdn.co/image/ab67616d000048513920455e220ddcda838b6341",
+                "width": 64,
+                "height": 64
+              }
+            ],
+            "name": "Gotobun no Katachi / Hatsukoi",
+            "release_date": "2021",
+            "release_date_precision": "year",
+            "total_tracks": 6,
+            "type": "album",
+            "uri": "spotify:album:4y9VcDuLW4l7xkumHWL4n6"
           },
-          {
-            "url": "https://i.scdn.co/image/ab67616d00001e02b126381bd3ace23ca228b846",
-            "width": 300,
-            "height": 300
+          "artists": [
+            {
+              "external_urls": {
+                "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+              },
+              "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
+              "id": "28ile6AlnprjyeQzy4F0SB",
+              "name": "中野家の五つ子",
+              "type": "artist",
+              "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+            }
+          ],
+          "available_markets": [...], //list of country codes
+          "disc_number": 1,
+          "duration_ms": 243733,
+          "explicit": false,
+          "external_ids": {
+            "isrc": "JPPC02001529"
           },
-          {
-            "url": "https://i.scdn.co/image/ab67616d00004851b126381bd3ace23ca228b846",
-            "width": 64,
-            "height": 64
-          }
-        ],
-        "name": "Minamikaze, Summer Days",
-        "release_date": "2021",
-        "release_date_precision": "year",
-        "total_tracks": 6,
-        "type": "album",
-        "uri": "spotify:album:4Jx5LW1wbsc4PiPSSEkM6C"
-      },
-      "artists": [
-        {
           "external_urls": {
-            "spotify": "https://open.spotify.com/artist/28ile6AlnprjyeQzy4F0SB"
+            "spotify": "https://open.spotify.com/track/6p9nMH9net8AjLCZJZtCLW"
           },
-          "href": "https://api.spotify.com/v1/artists/28ile6AlnprjyeQzy4F0SB",
-          "id": "28ile6AlnprjyeQzy4F0SB",
-          "name": "中野家の五つ子",
-          "type": "artist",
-          "uri": "spotify:artist:28ile6AlnprjyeQzy4F0SB"
+          "href": "https://api.spotify.com/v1/tracks/6p9nMH9net8AjLCZJZtCLW",
+          "id": "6p9nMH9net8AjLCZJZtCLW",
+          "is_local": false,
+          "name": "Gotobun no Katachi",
+          "popularity": 49,
+          "preview_url": null,
+          "track_number": 1,
+          "type": "track",
+          "uri": "spotify:track:6p9nMH9net8AjLCZJZtCLW"
+        },
+        "video_thumbnail": {
+          "url": null
         }
-      ],
-      "available_markets": [...], //list of country codes
-      "disc_number": 1,
-      "duration_ms": 227106,
-      "explicit": false,
-      "external_ids": {
-        "isrc": "JPPC02002081"
       },
-      "external_urls": {
-        "spotify": "https://open.spotify.com/track/7zvRSERTwH7ovbYGoAk8wx"
-      },
-      "href": "https://api.spotify.com/v1/tracks/7zvRSERTwH7ovbYGoAk8wx",
-      "id": "7zvRSERTwH7ovbYGoAk8wx",
-      "is_local": false,
-      "name": "Minamikaze",
-      "popularity": 34,
-      "preview_url": null,
-      "track_number": 1,
-      "type": "track",
-      "uri": "spotify:track:7zvRSERTwH7ovbYGoAk8wx"
-    }
 
-    /* additional track objects */
-  ]
+      /* additional track objects */
+    ],
+    "limit": 50,
+    "next": null,
+    "offset": 0,
+    "previous": null,
+    "total": 50
+  },
+  "type": "playlist",
+  "uri": "spotify:playlist:37i9dQZF1E35HoLL235RmS"
 }
 ```
 
