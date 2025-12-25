@@ -25,7 +25,6 @@ cp .env.example .env
 3. Configure your token endpoint in `.env`:
 ```env
 TOKEN_ENDPOINT=http://localhost:3000/spotifytoken 
-PORT=3000
 ```
 
 > [!NOTE]
