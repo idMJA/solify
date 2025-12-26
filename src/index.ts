@@ -1,6 +1,7 @@
 import "dotenv/config";
 
 import { Hono } from "hono";
+import { config } from "./config/env.js";
 import spotifyRoutes from "./routes/spotify.routes.js";
 
 const app = new Hono()
@@ -38,4 +39,9 @@ const app = new Hono()
 		return c.json({ error: err.message }, 500);
 	});
 
-export default app;
+export { app };
+
+export default { port: config.port, fetch: app.fetch };
+
+// Server startup has been moved to `src/server.ts`.
+// To run with explicit HOST/PORT values: `PORT=4000 HOST=127.0.0.1 bun src/server.ts`

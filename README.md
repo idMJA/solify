@@ -25,10 +25,33 @@ cp .env.example .env
 3. Configure your token endpoint in `.env`:
 ```env
 TOKEN_ENDPOINT=http://localhost:3000/spotifytoken 
+PORT=3000
+HOST=0.0.0.0
 ```
 
 > [!NOTE]
 > See [accessify](https://github.com/idMJA/accessify) for token endpoint setup.
+
+### Running on a custom host/port 🔧
+
+You can host Solify on a custom port and/or host by setting the `PORT` and `HOST` environment variables before starting the server. Examples:
+
+- Run locally on port 4000 (all interfaces):
+```bash
+PORT=4000 bun src/server.ts
+```
+
+- Bind to localhost only on port 8080:
+```bash
+PORT=8080 HOST=127.0.0.1 bun src/server.ts
+```
+
+If you use the provided script you can do the same with:
+```bash
+PORT=4000 bun run start:bun
+```
+
+The server will print a message like `Starting server on 0.0.0.0:3000 (Bun)` when it starts.
 
 ## Usage
 
