@@ -42,6 +42,3 @@ const app = new Hono()
 export { app };
 
 export default { port: config.port, fetch: app.fetch };
-
-// Server startup has been moved to `src/server.ts`.
-// To run with explicit HOST/PORT values: `PORT=4000 HOST=127.0.0.1 bun src/server.ts`

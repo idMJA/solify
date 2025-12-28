@@ -25,8 +25,6 @@ export function extractPlaylistId(input: string): string {
 export function extractTrackId(input: string): string {
 	if (!input) return input;
 
-	// Normalize and remove query/fragment or accidental appended params like
-	// `&limit=5` so callers that pass malformed paths still resolve the id.
 	const decoded = decodeURIComponent(input).trim();
 	const clean = decoded.split(/[?#&]/)[0].replace(/\/$/, "");
 

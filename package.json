@@ -1,5 +1,9 @@
 {
   "name": "solify",
+  "author": {
+    "email": "kiyomi@mjba.my",
+    "name": "iaMJ"
+  },
   "type": "module",
   "scripts": {
     "dev:bun": "bun --watch src/index.ts",
