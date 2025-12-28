@@ -3,7 +3,7 @@ export function extractPlaylistId(input: string): string {
 
 	const decoded = decodeURIComponent(input).trim();
 
-	const clean = decoded.split(/[?#]/)[0].replace(/\/$/, "");
+	const clean = decoded.split(/[?#&]/)[0].replace(/\/$/, "");
 
 	const uriMatch = clean.match(/spotify:playlist:([A-Za-z0-9]+)/);
 	if (uriMatch) return uriMatch[1];

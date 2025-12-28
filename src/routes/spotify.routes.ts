@@ -11,7 +11,8 @@ const router = new Hono();
 
 router.get("/playlist/full/:id", async (c) => {
 	try {
-		const playlistId = extractPlaylistId(c.req.param("id"));
+		const raw = c.req.param("id");
+		const playlistId = extractPlaylistId(raw);
 
 		if (!/^[A-Za-z0-9_-]{8,}$/.test(playlistId)) {
 			return c.json(
@@ -24,14 +25,25 @@ router.get("/playlist/full/:id", async (c) => {
 			);
 		}
 
-		const clientId =
+		let clientId =
 			c.req.query("client_id") ||
 			c.req.header("x-client-id") ||
 			c.req.header("x-spotify-client-id");
-		const clientSecret =
+		let clientSecret =
 			c.req.query("client_secret") ||
 			c.req.header("x-client-secret") ||
 			c.req.header("x-spotify-client-secret");
+
+		if (raw.includes("&")) {
+			const paramStr = raw.split("&").slice(1).join("&");
+			try {
+				const params = new URLSearchParams(paramStr);
+				clientId = clientId || params.get("client_id") || undefined;
+				clientSecret = clientSecret || params.get("client_secret") || undefined;
+			} catch {
+				// ignore parse errors
+			}
+		}
 
 		if (!clientId || !clientSecret) {
 			return c.json(
@@ -40,7 +52,13 @@ router.get("/playlist/full/:id", async (c) => {
 			);
 		}
 
-		const data = await fetchPlaylistFull(playlistId, clientId, clientSecret);
+		const limit = parseInt(c.req.query("limit") || "0", 10);
+		const data = await fetchPlaylistFull(
+			playlistId,
+			clientId,
+			clientSecret,
+			limit > 0 ? limit : undefined,
+		);
 		return c.json(data);
 	} catch (error) {
 		return c.json(
@@ -79,7 +97,13 @@ router.get("/playlist/full", async (c) => {
 			);
 		}
 
-		const data = await fetchPlaylistFull(playlistId, clientId, clientSecret);
+		const limit = parseInt(c.req.query("limit") || "0", 10);
+		const data = await fetchPlaylistFull(
+			playlistId,
+			clientId,
+			clientSecret,
+			limit > 0 ? limit : undefined,
+		);
 		return c.json(data);
 	} catch (error) {
 		return c.json(
@@ -110,7 +134,12 @@ router.get("/playlist", async (c) => {
 				400,
 			);
 		}
-		const data = await fetchPlaylist(playlistId);
+		const limit = parseInt(c.req.query("limit") || "0", 10);
+		const data = await fetchPlaylist(
+			playlistId,
+			undefined,
+			limit > 0 ? { limit } : undefined,
+		);
 		return c.json(data);
 	} catch (error) {
 		return c.json(

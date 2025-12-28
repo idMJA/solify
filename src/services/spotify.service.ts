@@ -18,15 +18,16 @@ const SPOTIFY_WEB_API_BASE = "https://api.spotify.com/v1";
 export async function fetchPlaylist(
 	playlistId: string,
 	authToken?: string,
+	opts?: { limit?: number },
 ): Promise<SpotifyPlaylist> {
 	const token = authToken ?? (await getAccessToken());
+	const limit = opts?.limit ?? 150;
 
 	const payload: SpotifyAPIRequest<PlaylistRequestVariables> = {
 		variables: {
 			uri: `spotify:playlist:${playlistId}`,
 			enableWatchFeedEntrypoint: false,
-			offset: 25,
-			limit: 50,
+			limit,
 		},
 		operationName: "fetchPlaylist",
 		extensions: {
@@ -99,8 +100,15 @@ export async function fetchPlaylistFull(
 	playlistId: string,
 	clientId?: string,
 	clientSecret?: string,
+	limit?: number,
 ) {
-	const playlist = (await fetchPlaylist(playlistId)) as SpotifyPlaylist;
+	// when caller requests a specific `limit`, fetch the playlist page starting
+	// at offset=0 with that limit so we get the requested number of items.
+	const playlist = (await fetchPlaylist(
+		playlistId,
+		undefined,
+		typeof limit === "number" && limit > 0 ? { limit } : undefined,
+	)) as SpotifyPlaylist;
 
 	const items: SpotifyPlaylistTrackItem[] = playlist.tracks?.items ?? [];
 	const ids = items

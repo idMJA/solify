@@ -251,8 +251,7 @@ export interface PartnerRecommendationsResponse {
 export type PlaylistRequestVariables = {
 	uri: string;
 	enableWatchFeedEntrypoint: boolean;
-	// Required pagination parameters for partner playlist query
-	offset: number;
+	// required pagination parameters for partner playlist query
 	limit: number;
 };
 
