@@ -25,6 +25,8 @@ export async function fetchPlaylist(
 		variables: {
 			uri: `spotify:playlist:${playlistId}`,
 			enableWatchFeedEntrypoint: false,
+			offset: 25,
+			limit: 50,
 		},
 		operationName: "fetchPlaylist",
 		extensions: {
