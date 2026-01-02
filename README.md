@@ -48,7 +48,7 @@ PORT=8080 HOST=127.0.0.1 bun src/server.ts
 
 If you use the provided script you can do the same with:
 ```bash
-PORT=4000 bun run start:bun
+PORT=4000 bun start
 ```
 
 The server will print a message like `Starting server on 0.0.0.0:3000 (Bun)` when it starts.
