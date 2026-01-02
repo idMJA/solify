@@ -6,8 +6,8 @@
   },
   "type": "module",
   "scripts": {
-    "dev:bun": "bun --watch src/index.ts",
-    "start:bun": "bun src/server.ts",
+    "dev": "bun --watch src/index.ts",
+    "start": "bun src/server.ts",
     "format": "biome check --write ./src",
     "lint": "tsc --noEmit"
   },
