@@ -6,8 +6,10 @@
   },
   "type": "module",
   "scripts": {
-    "dev:bun": "bun --watch src/index.ts",
+    "start": "vercel start",
+    "dev": "vercel dev",
     "start:bun": "bun src/server.ts",
+    "dev:bun": "bun --watch src/server.ts",
     "format": "biome check --write ./src",
     "lint": "tsc --noEmit"
   },
