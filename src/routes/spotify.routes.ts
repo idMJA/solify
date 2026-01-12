@@ -149,6 +149,41 @@ router.get("/playlist", async (c) => {
 	}
 });
 
+router.get("/playlist/:id", async (c) => {
+	try {
+		const raw = c.req.param("id");
+		const playlistId = extractPlaylistId(raw);
+
+		if (!/^[A-Za-z0-9_-]{8,}$/.test(playlistId)) {
+			console.debug("/playlist (path) - unable to parse playlist id", {
+				raw,
+				parsed: playlistId,
+			});
+			return c.json(
+				{
+					error: "Unable to parse playlist id from path",
+					id: playlistId,
+					raw,
+				},
+				400,
+			);
+		}
+
+		const limit = parseInt(c.req.query("limit") || "0", 10);
+		const data = await fetchPlaylist(
+			playlistId,
+			undefined,
+			limit > 0 ? { limit } : undefined,
+		);
+		return c.json(data);
+	} catch (error) {
+		return c.json(
+			{ error: error instanceof Error ? error.message : "Unknown error" },
+			500,
+		);
+	}
+});
+
 router.get("/recommendations/:id", async (c) => {
 	try {
 		const url = c.req.param("id");
